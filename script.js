@@ -1,11 +1,9 @@
-//document.body.style.margin = "0";
-//document.body.style.padding = "0";
-let size = 1000
+let size = 100
 let bubbles = new Array(size)
 let width = window.innerWidth
 let height = window.innerHeight
-let upperRadius = 0.1
-let lowerRadius = 0.1
+let upperRadius = 10
+let lowerRadius = 10
 let move = 1
 
 function setup() {
