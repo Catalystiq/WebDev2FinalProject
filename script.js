@@ -20,13 +20,10 @@ function draw() {
     bubbles[bubble].show()
   }
   player.show()
-}
 
-function keyPressed(){
-  player.keyPressed()
-}
-function keyReleased(){
-  console.log('test')
+  if(keyIsPressed == true){
+    player.keyPressed();
+  }
 }
 
 class Player{
