@@ -20,9 +20,8 @@ function draw() {
     bubbles[bubble].show()
   }
   player.show()
-
-  if(keyIsPressed == true){
-    player.keyPressed();
+  if(mouseIsPressed == true){
+    player.mousePressed();
   }
 }
 
@@ -43,19 +42,21 @@ class Player{
     rect(this.x, this.y, this.w, this.h)
   }
 
-  keyPressed(){
-    if(keyCode == 87){
-      this.y -= this.m
-    }
-    if(keyCode == 83){
-      this.y += this.m
-    }
-    if(keyCode == 65){
-      this.x -= this.m
-    }
-    if(keyCode == 68){
-      this.x += this.m
-    }
+  mousePressed(){
+    let playerLocation = createVector(this.x, this.y)
+    let target = createVector(mouseX,mouseY)
+    let distance = target.dist(playerLocation)
+    let mappedDistance = map(distance, 100, 0, 1.5, 0.5)
+    target.sub(playerLocation)
+    target.normalize()
+    target.mult(mappedDistance)
+    playerLocation.add(target)
+    this.x = playerLocation.x
+    this.y = playerLocation.y
+    rect(playerLocation.x, playerLocation.y, this.w, this.h)
+    //line(playerLocation.x, playerLocation.y, mouseX, mouseY)
+    // this.y = mouseY
+    // this.x = mouseX
   }
 }
 
