@@ -3,14 +3,14 @@ let bubbles = new Array(size)
 let player
 let width = window.innerWidth
 let height = window.innerHeight
-let upperRadius = 10
-let lowerRadius = 10
+let upperRadius = 1
+let lowerRadius = 20
 let move = 1
 
 function setup() {
   createCanvas(width, height)
-  bubbles = bubbles.fill().map(() => new Bubble(random(width), random(height), random(lowerRadius, upperRadius), width, height, '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0'), move))
-  player = new Player(width/2, height/2, 20, 20, '#ffffff', 5)
+  bubbles = bubbles.fill().map(() => new Bubble(random(width), random(height), random(lowerRadius, upperRadius), width, height, '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0'), move, 4))
+  player = new Player(width/2, height/2, 20, '#ffffff', 5)
 }
 
 function draw() {
@@ -18,6 +18,7 @@ function draw() {
   for (let bubble = 0; bubble < bubbles.length; bubble++) {
     bubbles[bubble].move()
     bubbles[bubble].show()
+    bubbles[bubble].checkCollision()
   }
   player.show()
   if(mouseIsPressed == true){
@@ -26,11 +27,10 @@ function draw() {
 }
 
 class Player{
-  constructor(x, y, w, h, c, m){
+  constructor(x, y, r, c, m){
     this.x = x
     this.y = y
-    this.w = w
-    this.h = h
+    this.r = r
     this.c = c
     this.m = m
   }
@@ -39,7 +39,7 @@ class Player{
     stroke(this.c)
     fill(this.c)
     strokeWeight(4)
-    rect(this.x, this.y, this.w, this.h)
+    ellipse(this.x, this.y, this.r)
   }
 
   mousePressed(){
@@ -53,7 +53,7 @@ class Player{
     playerLocation.add(target)
     this.x = playerLocation.x
     this.y = playerLocation.y
-    rect(playerLocation.x, playerLocation.y, this.w, this.h)
+    ellipse(playerLocation.x, playerLocation.y, this.r)
     //line(playerLocation.x, playerLocation.y, mouseX, mouseY)
     // this.y = mouseY
     // this.x = mouseX
@@ -61,7 +61,7 @@ class Player{
 }
 
 class Bubble {
-  constructor(x, y, r, w, h, c, m) {
+  constructor(x, y, r, w, h, c, m, s) {
     this.x = x
     this.y = y
     this.r = r
@@ -69,6 +69,7 @@ class Bubble {
     this.h = h
     this.c = c
     this.m = m
+    this.s = s
     this.dx = x
     this.dy = y
   }
@@ -83,11 +84,19 @@ class Bubble {
     }
   }
 
+  checkCollision(){
+    if(Math.floor(this.x + this.r) >= Math.floor(player.x + player.r) && Math.floor(this.y + this.r) >= Math.floor(player.y + player.r) && Math.floor(this.x - this.r) >= Math.floor(player.x - player.r) && Math.floor(this.y - this.r) <= Math.floor(player.y - player.r)){
+      this.r = 0
+      this.s = 0
+      
+      console.log('test')
+    }
+  }
 
   show() {
     stroke(this.c)
     fill(this.c)
-    strokeWeight(4)
+    strokeWeight(this.s)
     ellipse(this.x, this.y, this.r * 2)
   }
 }
