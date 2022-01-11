@@ -10,7 +10,7 @@ let move = 1
 function setup() {
   createCanvas(width, height)
   bubbles = bubbles.fill().map(() => new Bubble(random(width), random(height), random(lowerRadius, upperRadius), width, height, '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0'), move, 4))
-  player = new Player(width/2, height/2, 20, '#ffffff', 5)
+  player = new Player(width/2, height/2, 10, '#ffffff', 5)
 }
 
 function draw() {
@@ -39,7 +39,7 @@ class Player{
     stroke(this.c)
     fill(this.c)
     strokeWeight(4)
-    ellipse(this.x, this.y, this.r)
+    ellipse(this.x, this.y, this.r * 2)
   }
 
   mousePressed(){
@@ -54,9 +54,6 @@ class Player{
     this.x = playerLocation.x
     this.y = playerLocation.y
     ellipse(playerLocation.x, playerLocation.y, this.r)
-    //line(playerLocation.x, playerLocation.y, mouseX, mouseY)
-    // this.y = mouseY
-    // this.x = mouseX
   }
 }
 
@@ -75,21 +72,35 @@ class Bubble {
   }
 
   move() {
+    // if(this.r >= player.r){
+    //   if (this.x <= this.w && this.y <= this.h && this.x >= 0 && this.y >= 0) {
+    //     this.x += this.m
+    //     this.y += this.m
+    //   } else {
+    //     this.x = random(0, this.w)
+    //     this.y = random(0, this.h)
+    //   }
+    // }
+
     if (this.x <= this.w && this.y <= this.h && this.x >= 0 && this.y >= 0) {
-      this.x += random(-this.m, this.m)
-      this.y += random(-this.m, this.m)
+      if(this.r >= player.r){
+        this.x += this.m
+        this.y += this.m
+      }else{
+        this.x -= this.m
+        this.y -= this.m
+      }
     } else {
-      this.x = this.dx
-      this.y = this.dy
+      this.x = random(0, this.w)
+      this.y = random(0, this.h)
     }
   }
 
   checkCollision(){
-    if(Math.floor(this.x + this.r) >= Math.floor(player.x + player.r) && Math.floor(this.y + this.r) >= Math.floor(player.y + player.r) && Math.floor(this.x - this.r) >= Math.floor(player.x - player.r) && Math.floor(this.y - this.r) <= Math.floor(player.y - player.r)){
+    if(Math.floor(this.x + this.r) >= Math.floor(player.x - player.r) && Math.floor(this.y + this.r) >= Math.floor(player.y - player.r) && Math.floor(this.x - this.r) <= Math.floor(player.x + player.r) && Math.floor(this.y - this.r) <= Math.floor(player.y + player.r)){
+      player.r += this.r/4
       this.r = 0
       this.s = 0
-      
-      console.log('test')
     }
   }
 
